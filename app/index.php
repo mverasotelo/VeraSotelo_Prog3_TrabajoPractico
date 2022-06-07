@@ -20,6 +20,8 @@ require_once './controllers/ProductoController.php';
 
 require_once './controllers/MesaController.php';
 
+require_once './controllers/PedidoController.php';
+
 require_once './controllers/LoginController.php';
 
 require_once './middlewares/VerificadorPerfiles.php';
@@ -69,10 +71,10 @@ $app->group('/mesas', function (RouteCollectorProxy $group) {
   $group->post('[/]', \MesaController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
 })->add(\MiddlewareJWT::class.':verificarToken');
 
-// $app->group('/pedidos', function (RouteCollectorProxy $group) {
-//   $group->get('[/]', \UsuarioController::class . ':TraerTodos');
-//   $group->post('[/]', \UsuarioController::class . ':ChequearUno') -> add(\Verificadora::class . ':verificarUsuario');
-// });
+$app->group('/pedidos', function (RouteCollectorProxy $group) {
+  $group->get('[/]', \PedidoController::class . ':TraerTodos');
+  $group->post('[/]', \PedidoController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
+})->add(\MiddlewareJWT::class.':verificarToken');
 
 $app->get('[/]', function (Request $request, Response $response) {    
     $response->getBody()->write("Slim Framework 4 PHP");

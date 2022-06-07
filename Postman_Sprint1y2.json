@@ -41,6 +41,25 @@
 					"response": []
 				},
 				{
+					"name": "Obtener pedidos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/pedidos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"pedidos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Obtener mesas",
 					"request": {
 						"method": "GET",
@@ -155,6 +174,25 @@
 							"port": "666",
 							"path": [
 								"mesas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alta pedido",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/pedidos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"pedidos"
 							]
 						}
 					},

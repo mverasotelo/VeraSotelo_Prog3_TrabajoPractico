@@ -14,15 +14,25 @@ class Pedido{
     public $productos;
     public $mesa;  
 
-    public function __construct($id=null,$estado=null,$precioTotal=null,$productos=null,$mesa=null){
+    public function __construct($codigo=null,$estado=null,$precioTotal=null,$productos=null,$mesa=null){
         //Validar tipos de datos
-        $this->setId=$id;
+        $this->setCodigo($codigo);
         $this->setEstado($estado);
         $this->setPrecioTotal($precioTotal);
-        $this->setProductos($productos);
+        $this->productos=$productos;
         $this->setMesa($mesa);
     }
 
+    /**
+     * Valida y establece el codigo del pedido
+     *
+     * @param string $codigo
+     */
+    public function setCodigo($codigo){
+        if ($codigo!= null && is_string($codigo) && strlen($codigo)==6){
+            $this->codigo = $codigo;
+        }   
+    }
 
     /**
      * Valida y establece el estado del pedido
@@ -43,20 +53,10 @@ class Pedido{
      *
      * @param float $precio
      */
-    public function setPrecioTotal($precio){
+    public function setPrecioTotal($value){
+        $precio = floatval($value);
         if (is_float($precio) && !empty($precio) && $precio > 0) {
-            $this->precio = $precio;
-        }
-    }
-
-    /**
-     * Valida y establece los productos solicitados por la mesa
-     *
-     * @param int $productos
-     */
-    public function setProductos($productos){
-        if (is_array($productos) && !empty($cantidad)) {
-            $this->productos = $productos;
+            $this->precioTotal = $precio;
         }
     }
 
@@ -66,23 +66,33 @@ class Pedido{
      * @param int $mesa
      */
     public function setMesa($mesa){
-        if (is_int($mesa) && !empty($mesa)) {
+        if (is_string($mesa) && !empty($mesa)) {
             $this->mesa = $mesa;
         }
     }
 
-    /**
-     * Compara el objeto actual con un objeto pasado por parámetro según su codigo
-     * @return boolean
-     */
-    public function __Equals($otroPedido){
-        $retorno=false;
-        if(is_a($otroPedido,"Pedido")){
-            if(strcasecmp($this->codigo, $otroPedido->codigo)==0){
-                $retorno = true;
-            }
-        }
-        return $retorno;
+    public function ingresarPedido()
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("INSERT INTO pedidos (codigo, estado, precioTotal, productos, mesa) VALUES (:codigo, :estado, :precioTotal, :productos, :mesa)");
+        $consulta->bindValue(':codigo', $this->codigo, PDO::PARAM_STR);
+        $consulta->bindValue(':estado', $this->estado, PDO::PARAM_STR);
+        $consulta->bindValue(':precioTotal', $this->precioTotal, PDO::PARAM_STR);
+        $consulta->bindValue(':productos', $this->productos, PDO::PARAM_STR);
+        $consulta->bindValue(':mesa', $this->mesa, PDO::PARAM_STR);
+        $consulta->execute();
+
+        return $objAccesoDatos->obtenerUltimoId();
     }
+
+    public static function obtenerTodos()
+    {
+        $objAccesoDatos = AccesoDatos::obtenerInstancia();
+        $consulta = $objAccesoDatos->prepararConsulta("SELECT * FROM pedidos");
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_CLASS, 'Pedido');
+    }
+
 }
 ?>
