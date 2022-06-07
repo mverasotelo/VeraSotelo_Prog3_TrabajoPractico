@@ -17,6 +17,14 @@
 					"response": []
 				},
 				{
+					"name": "Obtener usuarios",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
 					"name": "Obtener un usuario",
 					"request": {
 						"method": "GET",
@@ -33,7 +41,7 @@
 					"response": []
 				},
 				{
-					"name": "Obtener usuarios",
+					"name": "Obtener mesas",
 					"request": {
 						"method": "GET",
 						"header": []
@@ -118,6 +126,35 @@
 							"port": "666",
 							"path": [
 								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alta mesa",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTQ2MzY4NDUsImV4cCI6MTY1NDY5Njg0NSwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6Ik1lcmNlZGVzIiwiY2xhdmUiOiIxMjM0NSIsInBlcmZpbCI6IlNPQ0lPIn0sImFwcCI6IlRlc3QgSldUIn0.I0Vhr_rDOhroHu0DOzQigfyp9mbfzYtF-ns3xQWsYe0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/mesas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"mesas"
 							]
 						}
 					},

@@ -84,30 +84,5 @@ class Pedido{
         }
         return $retorno;
     }
-
-    // /**
-    //  * Actualiza los productos del pedido
-    //  * @return boolean true si se actualizo el pedido, false sino habia suficiente stock o hubo algun error.
-    //  */
-    // public static function actualizarPedido($hamburguesa, $cantidad){
-    //     $retorno = false;
-    //     if(is_int($cantidad)){
-    //         $hamburguesas = Hamburguesa::leerArchivoJson("Hamburguesas.json");
-    //         var_dump($hamburguesas);
-    //         for($i = 0; $i < count($hamburguesas);$i++){
-    //             if($hamburguesa->__Equals($hamburguesas[$i])){
-    //                 var_dump($hamburguesas[$i]);
-    //                 $nuevoStock =  $this->getCantidad()-$cantidad;
-    //                 $hamburguesas[$i]->setCantidad($nuevoStock);  
-    //                 var_dump($hamburguesas[$i]);
-    //             }
-    //         }
-    //         if(Hamburguesa::guardarJson("Hamburguesas.json", $hamburguesas)){
-    //             $retorno=true;
-    //         }   
-    //     }
-    //     return $retorno;
-    // }
-
 }
 ?>
