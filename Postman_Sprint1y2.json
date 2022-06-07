@@ -1,0 +1,129 @@
+{
+	"info": {
+		"_postman_id": "2a9e4072-6532-4b12-9f24-9d10ed5c0e19",
+		"name": "TRABAJO PRACTICO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sprint 1 y 2",
+			"item": [
+				{
+					"name": "Login usuario",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener un usuario",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener productos",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener usuarios",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Alta usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre",
+									"value": "Mercedes",
+									"type": "default"
+								},
+								{
+									"key": "clave",
+									"value": "12345",
+									"type": "default"
+								},
+								{
+									"key": "perfil",
+									"value": "SOCIO",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/usuarios",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Alta producto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "nombre",
+									"value": "Gaseosa",
+									"type": "default"
+								},
+								{
+									"key": "tipo",
+									"value": "BEBIDA",
+									"type": "default"
+								},
+								{
+									"key": "precio",
+									"value": "300",
+									"type": "default"
+								},
+								{
+									"key": "stock",
+									"value": "45",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:666/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
