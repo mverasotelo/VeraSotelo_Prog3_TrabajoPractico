@@ -11,9 +11,11 @@ class MiddlewareJWT
 
         if($header!=null){
             $token = trim(explode("Bearer", $header)[1]);
-            if(AutentificadorJWT::verificarToken($token)){
+            
+            try{
+                AutentificadorJWT::verificarToken($token);
                 $response = $handler->handle($request);
-            }else{
+            }catch(Exception $e){
                 $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
                 $response = $response->withStatus(401);
             }

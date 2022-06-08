@@ -16,7 +16,7 @@ class LoginController
         if(Usuario::existeUsuario($usuario,$clave)){
             $usuarioBD = Usuario::obtenerUsuario($usuario);
             $perfil = $usuarioBD->perfil;
-            $datos = array('usuario' => $usuario, 'perfil' => $perfil);
+            $datos = array('usuario' => $usuario, 'clave' => $clave, 'perfil' => $perfil);
             $token = AutentificadorJWT::CrearToken($datos);
             $payload = json_encode(array('jwt' => $token));
             $response->getBody()->write($payload);
