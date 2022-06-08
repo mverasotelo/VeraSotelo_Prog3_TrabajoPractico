@@ -77,7 +77,7 @@ $app->group('/pedidos', function (RouteCollectorProxy $group) {
 })->add(\MiddlewareJWT::class.':verificarToken');
 
 $app->get('[/]', function (Request $request, Response $response) {    
-    $response->getBody()->write("Slim Framework 4 PHP");
+    $response->getBody()->write("TP Programación III Mercedes Vera Sotelo");
     return $response;
 });
 
