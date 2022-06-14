@@ -1,37 +1,148 @@
 <?php
+/*
+Mercedes Vera Sotelo
+Trabajo Práctico
+*/
+
+require_once './interfaces/IApiUsable.php';
 require_once './models/Pedido.php';
 
-class PedidoController extends Pedido
+use \App\Models\Pedido as Pedido;
+
+class PedidoController implements IApiUsable
 {
-    public function CargarUno($request, $response, $args)
-    {
-        $parametros = $request->getParsedBody();
+  public function CargarUno($request, $response, $args)
+  {
+    $parametros = $request->getParsedBody();
 
-        $codigo = $parametros['codigo'];
-        $estado = $parametros['estado'];        
-        $precioTotal = $parametros['precioTotal'];
-        $productos = $parametros['productos'];        
-        $mesa = $parametros['mesa'];
+    $codigo = $parametros['codigo'];
+    $estado = $parametros['estado'];
+    $mesa = $parametros['mesa'];
+    $precioTotal = $parametros['precioTotal'];
+    $productos = $parametros['productos'];
 
-        $pedido = new Pedido($codigo,$estado,$precioTotal,$productos,$mesa);
-        $pedido->ingresarPedido();
+    if(self::ValidarEstado($estado)){
+      $pedido = new Pedido();
+      $pedido->codigo = $codigo;
+      $pedido->estado = $estado;
+      $pedido->mesa = $mesa;
+      $pedido->precioTotal = $precio;
+      $pedido->productos = $productos;
 
-        $payload = json_encode(array("mensaje" => "Pedido creado con exito"));
-
-        $response->getBody()->write($payload);
-        return $response
-          ->withHeader('Content-Type', 'application/json');
+      $pedido->save();
+  
+      $payload = json_encode(array("mensaje" => "Pedido creado con exito"));
+    }
+    else{
+      $payload = json_encode(array("ERROR" => "Estado invalido"));
     }
 
-    public function TraerTodos($request, $response, $args)
-    {
-        $lista = Pedido::obtenerTodos();
-        $payload = json_encode(array("Lista Pedidos" => $lista));
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
 
-        $response->getBody()->write($payload);
-        return $response
-          ->withHeader('Content-Type', 'application/json')
-          ->withStatus(302);
+  public function TraerUno($request, $response, $args)
+  {
+    $id = $args['id'];
+
+    $pedido = Pedido::find($id);
+
+    $payload = json_encode($pedido);
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function TraerTodos($request, $response, $args)
+  {
+    $lista = Pedido::all();
+    $payload = json_encode(array("listaPedidos" => $lista));
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function TraerPendientes($request, $response, $args)
+  {
+    $header = $request->getHeaderLine('Authorization');
+    $token = trim(explode("Bearer", $header)[1]);
+    $data = AutentificadorJWT::ObtenerData($token);
+    $perfil = $data->perfil;
+
+    if($perfil == 'MOZO'){
+      $lista = Pedido::where('estado','PENDIENTE')->get();
+      $payload = json_encode(array("listaPendientes" => $lista));  
+    }else{
+      $response->getBody()->write($perfil);
+      $payload = json_encode(array("ERROR" => "Perfil ".$perfil." no autorizado"));
     }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function ModificarUno($request, $response, $args)
+  {
+    $parametros = $request->getParsedBody();
+
+    $codigoModificado = $parametros['codigo'];
+    $mesaModificada = $parametros['mesa'];
+    $precioTotalModificado = $parametros['precioTotal'];
+    $estadoModificado = $parametros['estado'];
+    $productosModificado = $parametros['productos'];
+
+    $pedidoId = $args['id'];
+
+    $pedido = Pedido::where('id', '=', $pedidoId)->first();
     
+    if ($pedido !== null) {
+      if(ValidarPerfil($perfilModificado)){
+        $pedido = new Pedido();
+        $pedido->mesa = $mesaModificada;
+        $pedido->codigo = $codigoModificado;
+        $pedido->precioTotal = $precioTotalModificado;
+        $pedido->estado = $estadoModificado;
+        $pedido->productos = $productosModificado;
+
+        $pedido->save();
+    
+        $payload = json_encode(array("mensaje" => "Pedido modificado con exito"));
+      }
+      else{
+        $payload = json_encode(array("ERROR" => "Estado invalido"));
+      }    
+    }else{
+      $payload = json_encode(array("mensaje" => "Pedido no encontrado"));
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function BorrarUno($request, $response, $args)
+  {
+    $pedidoId = $args['id'];
+    $pedido = Pedido::find($pedidoId);
+    $pedido->delete();
+
+    $payload = json_encode(array("mensaje" => "Pedido borrado con exito"));
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  private static function ValidarEstado($value){
+    $estado = strtoupper($value);
+    if($estado=="PENDIENTE" || $estado=="EN PREPARACION" || $estado=="LISTO PARA SERVIR"){
+      return true;
+    }
+    return false;
+  }
+
 }

@@ -9,29 +9,21 @@ use Psr\Http\Server\RequestHandlerInterface;
 use Slim\Factory\AppFactory;
 use Slim\Routing\RouteCollectorProxy;
 use Slim\Routing\RouteContext;
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 
 require __DIR__ . '/../vendor/autoload.php';
 
 require_once './db/AccesoDatos.php';
-
 require_once './controllers/UsuarioController.php';
-
 require_once './controllers/ProductoController.php';
-
 require_once './controllers/MesaController.php';
-
 require_once './controllers/PedidoController.php';
-
 require_once './controllers/LoginController.php';
-
 require_once './middlewares/VerificadorPerfiles.php';
-
 require_once './middlewares/VerificadorUsuario.php';
-
 require_once './middlewares/MiddlewareJWT.php';
-
 require_once './middlewares/AutentificadorJWT.php';
-
 
 // Load ENV
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -45,9 +37,26 @@ $app = AppFactory::create();
 
 // Add error middleware
 $app->addErrorMiddleware(true, true, true);
-
-// Add parse body
 $app->addBodyParsingMiddleware();
+$app->addRoutingMiddleware();
+
+// Eloquent
+$container=$app->getContainer();
+
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => $_ENV['MYSQL_HOST'],
+    'port'      => $_ENV['MYSQL_PORT'],
+    'database'  => $_ENV['MYSQL_DB'],
+    'username'  => $_ENV['MYSQL_USER'],
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => '',
+]);
+
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
 
 // Routes
 $app->group('/login', function (RouteCollectorProxy $group) {
@@ -67,16 +76,18 @@ $app->group('/productos', function (RouteCollectorProxy $group) {
 })->add(\MiddlewareJWT::class.':verificarToken');
 
 $app->group('/mesas', function (RouteCollectorProxy $group) {
-  $group->get('[/]', \MesaController::class . ':TraerTodos');
-  $group->post('[/]', \MesaController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
+  $group->get('[/]', \MesaController::class . ':TraerTodos')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
+  $group->post('[/]', \MesaController::class . ':CargarUno');
 })->add(\MiddlewareJWT::class.':verificarToken');
 
 $app->group('/pedidos', function (RouteCollectorProxy $group) {
-  $group->get('[/]', \PedidoController::class . ':TraerTodos');
+  $group->get('[/]', \PedidoController::class . ':TraerTodos')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
+  $group->get('/pendientes', \PedidoController::class . ':TraerPendientes');
+  $group->post('/cambiarEstado', \PedidoController::class . ':CambiarEstadoPedido');
   $group->post('[/]', \PedidoController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
 })->add(\MiddlewareJWT::class.':verificarToken');
 
-$app->get('[/]', function (Request $request, Response $response) {    
+$app->get('[/]', function (Request $request, Response $response) {
     $response->getBody()->write("TP Programación III Mercedes Vera Sotelo");
     return $response;
 });

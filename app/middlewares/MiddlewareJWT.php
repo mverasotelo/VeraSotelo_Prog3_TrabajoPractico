@@ -16,7 +16,7 @@ class MiddlewareJWT
                 AutentificadorJWT::verificarToken($token);
                 $response = $handler->handle($request);
             }catch(Exception $e){
-                $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
+                $response->getBody()->write(json_encode(["ERROR"=>  $e->getMessage()]));
                 $response = $response->withStatus(401);
             }
         }else{
