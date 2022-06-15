@@ -93,7 +93,9 @@ $app->group('/mesas', function (RouteCollectorProxy $group) {
 $app->group('/pedidos', function (RouteCollectorProxy $group) {
   $group->get('[/]', \PedidoController::class . ':TraerTodos');
   $group->get('/{pedido}', \PedidoController::class . ':TraerUno');
-  $group->post('/cambiarEstado', \PedidoController::class . ':CambiarEstadoPedido')->add(\VerificadorPerfiles::class.':VerificarPerfilMozo');
+  $group->put('/preparar/cocina', \ProductoController::class . ':PrepararCocina')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
+  $group->put('/preparar/barra', \ProductoController::class . ':PrepararBarra')->add(\VerificadorPerfiles::class.':VerificarPerfilBartender');
+  $group->put('/preparar/cerveceria', \ProductoController::class . ':PrepararCerveceria')->add(\VerificadorPerfiles::class.':VerificarPerfilCervecero');
   $group->post('[/]', \PedidoController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
 })->add(\MiddlewareJWT::class.':verificarToken');
 

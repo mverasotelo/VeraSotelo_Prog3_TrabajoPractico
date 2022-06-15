@@ -23,6 +23,10 @@ class ProductoPedido extends Model{
         return $this->hasOne(Producto::class, 'id');
     }
 
+    public function empleado(){
+        return $this->hasOne(Usuario::class, 'id');
+    }
+
     public function pedidos(){
         return $this->belongsTo(Pedido::class, 'id');
     }

@@ -27,10 +27,7 @@ class PedidoController implements IApiUsable
     $pedido->mesa = $mesa;
 
     if(self::ValidarEstado($estado)){
-
-
       $pedido->save();
-  
       $payload = json_encode(array("mensaje" => "Pedido creado con exito"));
     }
     else{
@@ -69,10 +66,7 @@ class PedidoController implements IApiUsable
           $pp->producto;
         }
     } 
-    
-
     $payload = json_encode(array("listaPedidos" => $lista));
-
     $response->getBody()->write($payload);
     return $response
       ->withHeader('Content-Type', 'application/json');

@@ -36,7 +36,7 @@ class MesaController implements IApiUsable
     $mesa = Mesa::where('codigo',$codigo)->first();
     $mesa->pedidos;
 
-    $payload = json_encode($mesa."</br>");
+    $payload = json_encode(array("listaMesas" => $mesa));
 
     $response->getBody()->write($payload);
     return $response
@@ -104,18 +104,19 @@ class MesaController implements IApiUsable
   {
     $mesaCodigo = $args['codigo'];
 
-    // Conseguimos el objeto
     $mesa = Mesa::where('codigo', $mesaCodigo)->first();
 
-    // Si existe
     if ($mesa !== null) {
-      // Seteamos una nueva mesa 
-      $mesa->estado = "CERRADA";
-      $mesa->save();
+      if($mesa->estado != "CERRADA"){
+        $mesa->estado = "CERRADA";
+        $mesa->save();
+        $payload = json_encode(array("mensaje" => "Mesa ".$mesaCodigo." cerrada con exito"));
+      }else{
+        $payload = json_encode(array("mensaje" => "La mesa ".$mesaCodigo." ya se encontraba cerrada"));
 
-      $payload = json_encode(array("mensaje" => "Mesa cerrada con exito"));
+      }
     } else {
-      $payload = json_encode(array("mensaje" => "Mesa no encontrada"));
+      $payload = json_encode(array("mensaje" => "Mesa ".$mesaCodigo." no encontrada"));
     }
 
     $response->getBody()->write($payload);

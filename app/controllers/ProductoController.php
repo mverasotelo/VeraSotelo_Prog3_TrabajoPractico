@@ -4,10 +4,12 @@ Mercedes Vera Sotelo
 Trabajo Práctico
 */
 
+require_once './models/Usuario.php';
 require_once './models/Producto.php';
 require_once './models/ProductoPedido.php';
 require_once './interfaces/IApiUsable.php';
 
+use \App\Models\Usuario as Usuario;
 use \App\Models\Producto as Producto;
 use \App\Models\ProductoPedido as ProductoPedido;
 
@@ -93,6 +95,93 @@ class ProductoController implements IApiUsable
       ->withHeader('Content-Type', 'application/json');
   }
   
+  public function PrepararCerveceria($request, $response, $args)
+  {
+    $parametros = $request->getParsedBody();
+
+    // $nombreUsuario= $parametros['usuario'];
+    $tiempoEstimado = $parametros['tiempoEstimado'];
+    $productoPedidoId = $parametros['id'];
+
+    // $usuario=Usuario::where('nombre',$nombreUsuario)->first();
+    $producto = ProductoPedido::find($productoPedidoId);
+    
+    if ($producto !== null && $tiempoEstimado>0){
+        if(self::ConsultaTipoProducto($producto) == "CERVEZA"){
+          // $producto->usuario_id = $usuario->id;
+          $producto->tiempoEstimado = $tiempoEstimado;
+          $producto->estado = "EN PREPARACION";
+          $producto->save();
+          $payload = json_encode(array("mensaje" => "El pedido ".$productoPedidoId." se encuentra en preparacion. Tiempo estimado: ".$producto->tiempoEstimado." minutos."));
+        }else{
+          $payload = json_encode(array("mensaje" => "El pedido ".$productoPedidoId." no es del sector CERVECERIA"));
+        }
+      }else{
+      $payload = json_encode(array("mensaje" => "Ha ocurrido un error al realizar la operación"));
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function PrepararCocina($request, $response, $args)
+  {
+    $parametros = $request->getParsedBody();
+
+    // $nombreUsuario= $parametros['usuario'];
+    $tiempoEstimado = $parametros['tiempoEstimado'];
+    $productoPedidoId = $parametros['id'];
+
+    // $usuario=Usuario::where('nombre',$nombreUsuario)->first();
+    $producto = ProductoPedido::find($productoPedidoId);
+    
+    if ($producto !== null && $tiempoEstimado>0){
+        if(self::ConsultaTipoProducto($producto) == "COMIDA" || self::ConsultaTipoProducto($producto) == "POSTRE"){
+          // $producto->usuario_id = $usuario->id;
+          $producto->tiempoEstimado = $tiempoEstimado;
+          $producto->estado = "EN PREPARACION";
+          $producto->save();
+          $payload = json_encode(array("mensaje" => "El pedido ".$productoPedidoId." se encuentra en preparacion. Tiempo estimado: ".$producto->tiempoEstimado." minutos."));
+        }else{
+          $payload = json_encode(array("mensaje" => "El pedido ".$productoPedidoId." no es del sector COCINA"));
+        }
+      }else{
+      $payload = json_encode(array("mensaje" => "Ha ocurrido un error al realizar la operación"));
+    }
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function PrepararBarra($request, $response, $args){
+    $parametros = $request->getParsedBody();
+
+    // $nombreUsuario= $parametros['usuario'];
+    $tiempoEstimado = $parametros['tiempoEstimado'];
+    $productoPedidoId = $parametros['id'];
+
+    // $usuario=Usuario::where('nombre',$nombreUsuario)->first();
+    $producto = ProductoPedido::find($productoPedidoId);
+    
+    if ($producto !== null && $tiempoEstimado>0){
+        if(self::ConsultaTipoProducto($producto) == "BEBIDA"){
+          // $producto->usuario_id = $usuario->id;
+          $producto->tiempoEstimado = $tiempoEstimado;
+          $producto->estado = "EN PREPARACION";
+          $producto->save();
+          $payload = json_encode(array("mensaje" => "El pedido ".$productoPedidoId." se encuentra en preparacion. Tiempo estimado: ".$producto->tiempoEstimado." minutos."));
+        }else{
+          $payload = json_encode(array("mensaje" => "El pedido ".$productoPedidoId." no es del sector BARRA"));
+        }
+      }else{
+      $payload = json_encode(array("mensaje" => "Ha ocurrido un error al realizar la operación"));
+    }
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
   public function ModificarUno($request, $response, $args)
   {
     $parametros = $request->getParsedBody();
@@ -150,8 +239,13 @@ class ProductoController implements IApiUsable
     }
 
     private function ConsultaPendientes($tipo){
-      return ProductoPedido::select('pedido_producto.pedido_id','pedido_producto.cantidad','productos.nombre','productos.tipo' )->
-      join('productos', 'pedido_producto.producto_id', '=', 'productos.id')->where('productos.tipo',$tipo)->where('pedido_producto.estado','PENDIENTE')->get();
+      return ProductoPedido::select('pedido_producto.pedido_id','pedido_producto.cantidad','productos.nombre','productos.tipo')
+      ->join('productos', 'pedido_producto.producto_id', '=', 'productos.id')
+      ->where('productos.tipo',$tipo)->where('pedido_producto.estado','PENDIENTE')->get();
     }
 
+    private function ConsultaTipoProducto($productoPedido){
+      return ProductoPedido::select('productos.tipo')
+      ->join('productos', $productoPedido->producto_id, '=', 'productos.id');
+    }
 }
