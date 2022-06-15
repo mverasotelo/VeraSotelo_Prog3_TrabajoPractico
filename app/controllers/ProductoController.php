@@ -5,9 +5,11 @@ Trabajo Práctico
 */
 
 require_once './models/Producto.php';
+require_once './models/ProductoPedido.php';
 require_once './interfaces/IApiUsable.php';
 
 use \App\Models\Producto as Producto;
+use \App\Models\ProductoPedido as ProductoPedido;
 
 class ProductoController implements IApiUsable
 {
@@ -62,6 +64,35 @@ class ProductoController implements IApiUsable
       ->withHeader('Content-Type', 'application/json');
   }
 
+  public function TraerPendientesCocina($request, $response, $args)
+  {
+    $lista = self::consultaPendientes("COMIDA")->concat(self::consultaPendientes("POSTRE"));
+
+    $payload = json_encode(array("pendientesCocina" => $lista));  
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function TraerPendientesCerveceria($request, $response, $args)
+  {
+    $payload = json_encode(array("pendientesCerveceria" => self::consultaPendientes("CERVEZA")));
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function TraerPendientesBarra($request, $response, $args)
+  {
+    $payload = json_encode(array("pendientesBarra" => self::consultaPendientes("BEBIDA")));
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+  
   public function ModificarUno($request, $response, $args)
   {
     $parametros = $request->getParsedBody();
@@ -117,4 +148,10 @@ class ProductoController implements IApiUsable
       }
       return false;
     }
+
+    private function ConsultaPendientes($tipo){
+      return ProductoPedido::select('pedido_producto.pedido_id','pedido_producto.cantidad','productos.nombre','productos.tipo' )->
+      join('productos', 'pedido_producto.producto_id', '=', 'productos.id')->where('productos.tipo',$tipo)->where('pedido_producto.estado','PENDIENTE')->get();
+    }
+
 }

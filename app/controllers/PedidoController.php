@@ -6,8 +6,10 @@ Trabajo Práctico
 
 require_once './interfaces/IApiUsable.php';
 require_once './models/Pedido.php';
+require_once './models/ProductoPedido.php';
 
 use \App\Models\Pedido as Pedido;
+use \App\Models\ProductoPedido as ProductoPedido;
 
 class PedidoController implements IApiUsable
 {
@@ -18,16 +20,14 @@ class PedidoController implements IApiUsable
     $codigo = $parametros['codigo'];
     $estado = $parametros['estado'];
     $mesa = $parametros['mesa'];
-    $precioTotal = $parametros['precioTotal'];
-    $productos = $parametros['productos'];
+
+    $pedido = new Pedido();
+    $pedido->codigo = $codigo;
+    $pedido->estado = $estado;
+    $pedido->mesa = $mesa;
 
     if(self::ValidarEstado($estado)){
-      $pedido = new Pedido();
-      $pedido->codigo = $codigo;
-      $pedido->estado = $estado;
-      $pedido->mesa = $mesa;
-      $pedido->precioTotal = $precio;
-      $pedido->productos = $productos;
+
 
       $pedido->save();
   
@@ -44,9 +44,14 @@ class PedidoController implements IApiUsable
 
   public function TraerUno($request, $response, $args)
   {
-    $id = $args['id'];
+    $codigoPedido = $args['pedido'];
 
-    $pedido = Pedido::find($id);
+    $pedido = Pedido::where('codigo',$codigoPedido)->first();
+
+    $productosPedidos = $pedido->productosPedidos;
+    foreach($productosPedidos as $pp){
+      $pp->producto;
+    }
 
     $payload = json_encode($pedido);
 
@@ -58,27 +63,15 @@ class PedidoController implements IApiUsable
   public function TraerTodos($request, $response, $args)
   {
     $lista = Pedido::all();
+    foreach($lista as $pedido){
+       $productosPedidos = $pedido->productosPedidos;
+        foreach($productosPedidos as $pp){
+          $pp->producto;
+        }
+    } 
+    
+
     $payload = json_encode(array("listaPedidos" => $lista));
-
-    $response->getBody()->write($payload);
-    return $response
-      ->withHeader('Content-Type', 'application/json');
-  }
-
-  public function TraerPendientes($request, $response, $args)
-  {
-    $header = $request->getHeaderLine('Authorization');
-    $token = trim(explode("Bearer", $header)[1]);
-    $data = AutentificadorJWT::ObtenerData($token);
-    $perfil = $data->perfil;
-
-    if($perfil == 'MOZO'){
-      $lista = Pedido::where('estado','PENDIENTE')->get();
-      $payload = json_encode(array("listaPendientes" => $lista));  
-    }else{
-      $response->getBody()->write($perfil);
-      $payload = json_encode(array("ERROR" => "Perfil ".$perfil." no autorizado"));
-    }
 
     $response->getBody()->write($payload);
     return $response

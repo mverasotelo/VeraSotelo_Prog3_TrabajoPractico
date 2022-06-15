@@ -10,15 +10,20 @@ class VerificadorPerfiles
     {
         $method = $request->getMethod();
         $response = new Response();
-        $header = $request->getHeaderLine('Authorization');
-        $token = trim(explode("Bearer", $header)[1]);
-        $data = AutentificadorJWT::ObtenerData($token);
-        if($data->perfil == "SOCIO"){
-            $response = $handler->handle($request);
+        $perfil = self::obtenerPerfil($request);
+
+        if($perfil){
+            if($perfil == "SOCIO"){
+                $response = $handler->handle($request);
+            }else{
+                $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
+                $response = $response->withStatus(401);
+            }        
         }else{
-            $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
-            $response = $response->withStatus(403);
+            $response->getBody()->write(json_encode(["ERROR"=>"Usuario no logueado"]));
+            $response = $response->withStatus(401);
         }
+
         return $response;
     }
 
@@ -26,37 +31,93 @@ class VerificadorPerfiles
     {
         $method = $request->getMethod();
         $response = new Response();
-        $header = $request->getHeaderLine('Authorization');
-        $token = trim(explode("Bearer", $header)[1]);
-        $data = AutentificadorJWT::ObtenerData($token);
-        if($data->perfil == "SOCIO" || $data->perfil == "MOZO"){
-            $response = $handler->handle($request);
+        $perfil = self::obtenerPerfil($request);
+
+        if($perfil){
+            if($perfil == "SOCIO" || $perfil == "MOZO"){
+                $response = $handler->handle($request);
+            }else{
+                $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
+                $response = $response->withStatus(401);
+            }        
         }else{
-            $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
-            $response = $response->withStatus(403);
+            $response->getBody()->write(json_encode(["ERROR"=>"Usuario no logueado"]));
+            $response = $response->withStatus(401);
         }
         return $response;
     }
 
-    public static function VerificarPerfilPendientes($request, $handler)
+    public static function VerificarPerfilCocinero($request, $handler)
     {
         $method = $request->getMethod();
         $response = new Response();
 
         $body = $request->getParsedBody();
-        $estado = $body['estado'];
+        $perfil = self::obtenerPerfil($request);
 
-        $header = $request->getHeaderLine('Authorization');
-        $token = trim(explode("Bearer", $header)[1]);
-        $data = AutentificadorJWT::ObtenerData($token);
-        $perfil = $data->perfil;
-        $response->getBody()->write($perfil);
-
-        if($perfil == "MOZO"){
-            $request->attributes->set('perfil', 'MOZO');            
-            $response = $handler->handle($request);
+        if($perfil){
+            if($perfil == "SOCIO" || $perfil == "COCINERO" || $perfil == "MOZO"){
+                $response = $handler->handle($request);
+            }else{
+                $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
+                $response = $response->withStatus(401);
+            }        
+        }else{
+            $response->getBody()->write(json_encode(["ERROR"=>"Usuario no logueado"]));
+            $response = $response->withStatus(401);
         }
         return $response;
+    }
+
+    public static function VerificarPerfilCervecero($request, $handler)
+    {
+        $method = $request->getMethod();
+        $response = new Response();
+        $perfil = self::obtenerPerfil($request);
+
+        if($perfil){
+            if($perfil == "SOCIO" || $perfil == "CERVECERO" || $perfil == "MOZO"){
+                $response = $handler->handle($request);
+            }else{
+                $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
+                $response = $response->withStatus(401);
+            }        
+        }else{
+            $response->getBody()->write(json_encode(["ERROR"=>"Usuario no logueado"]));
+            $response = $response->withStatus(401);
+        }
+        return $response;
+    }
+
+    public static function VerificarPerfilBartender($request, $handler)
+    {
+        $method = $request->getMethod();
+        $response = new Response();
+        $perfil = self::obtenerPerfil($request);
+
+        if($perfil){
+            if($perfil == "SOCIO" || $perfil == "BARTENDER" || $perfil == "MOZO"){
+                $response = $handler->handle($request);
+            }else{
+                $response->getBody()->write(json_encode(["ERROR"=>"Usuario no autorizado"]));
+                $response = $response->withStatus(401);
+            }        
+        }else{
+            $response->getBody()->write(json_encode(["ERROR"=>"Usuario no logueado"]));
+            $response = $response->withStatus(401);
+        }
+        return $response;
+    }
+
+    private static function obtenerPerfil($request){
+        $perfil=null;
+        $header = $request->getHeaderLine('Authorization');
+        if($header){
+            $token = trim(explode("Bearer", $header)[1]);
+            $data = AutentificadorJWT::ObtenerData($token);
+            $perfil = $data->perfil;    
+        }
+        return $perfil;
     }
 }
 

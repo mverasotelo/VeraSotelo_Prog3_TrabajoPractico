@@ -31,12 +31,12 @@ class MesaController implements IApiUsable
 
   public function TraerUno($request, $response, $args)
   {
-
     $codigo = $args['codigo'];
 
-    $mesa = Mesa::find($codigo);
+    $mesa = Mesa::where('codigo',$codigo)->first();
+    $mesa->pedidos;
 
-    $payload = json_encode($mesa);
+    $payload = json_encode($mesa."</br>");
 
     $response->getBody()->write($payload);
     return $response
@@ -46,6 +46,10 @@ class MesaController implements IApiUsable
   public function TraerTodos($request, $response, $args)
   {
     $lista = Mesa::all();
+    foreach($lista as $mesa){
+      $mesa->pedidos;
+    }
+
     $payload = json_encode(array("listaMesas" => $lista));
 
     $response->getBody()->write($payload);
@@ -96,35 +100,36 @@ class MesaController implements IApiUsable
       ->withHeader('Content-Type', 'application/json');
   }
 
+  public function CerrarMesa($request, $response, $args)
+  {
+    $mesaCodigo = $args['codigo'];
 
+    // Conseguimos el objeto
+    $mesa = Mesa::where('codigo', $mesaCodigo)->first();
 
-    // public function CargarUno($request, $response, $args)
-    // {
-    //     $parametros = $request->getParsedBody();
+    // Si existe
+    if ($mesa !== null) {
+      // Seteamos una nueva mesa 
+      $mesa->estado = "CERRADA";
+      $mesa->save();
 
-    //     $codigo = $parametros['codigo'];
-    //     $estado = $parametros['estado'];        
-    //     $cliente = $parametros['cliente'];
+      $payload = json_encode(array("mensaje" => "Mesa cerrada con exito"));
+    } else {
+      $payload = json_encode(array("mensaje" => "Mesa no encontrada"));
+    }
 
-    //     $mesa = new Mesa($codigo,$estado,$cliente);
-    //     $mesa->crearMesa();
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
 
-    //     $payload = json_encode(array("mensaje" => "Mesa creada con exito"));
+  private static function ValidarEstado($value){
+    $estado = strtoupper($value);
+    if($estado=="CON CLIENTES ESPERANDO PEDIDO" || $estado=="CON CLIENTES COMIENDO" ||  $estado=="CON CLIENTES PAGANDO" || $estado=="CERRADA"){
+      return true;
+    }
+    return false;
+  }
 
-    //     $response->getBody()->write($payload);
-    //     return $response
-    //       ->withHeader('Content-Type', 'application/json');
-    // }
-
-    // public function TraerTodos($request, $response, $args)
-    // {
-    //     $lista = Mesa::obtenerTodos();
-    //     $payload = json_encode(array("Lista Mesa" => $lista));
-
-    //     $response->getBody()->write($payload);
-    //     return $response
-    //       ->withHeader('Content-Type', 'application/json')
-    //       ->withStatus(302);
-    // }
     
 }

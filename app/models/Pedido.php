@@ -14,10 +14,14 @@ class Pedido extends Model{
 
     use SoftDeletes;
 
-    protected $primaryKey = 'codigo';
-    protected $fillable = ['codigo','estado','precioTotal','mesa','productos'];
+    protected $primaryKey = 'id';
+    protected $fillable = ['codigo','tiempoEstimado','precioTotal','mesa'];
     public $incrementing = true;
     public $timestamps = false;
+
+    public function productosPedidos(){
+        return $this->hasMany(ProductoPedido::class, 'pedido_id');
+    }
 
     const DELETED_AT = 'fechaBaja';
 
