@@ -230,22 +230,51 @@ class ProductoController implements IApiUsable
     return $response
       ->withHeader('Content-Type', 'application/json');
   }
-    private static function ValidarTipo($value){
-      $tipo = strtoupper($value);
-      if($tipo=="COMIDA" || $tipo=="BEBIDA" || $tipo=="CERVEZA" || $tipo=="POSTRE"){
-          return true;
-      }
-      return false;
+
+  public function DescargarCsv($request, $response, $args)
+  {
+    if(Producto::descargarCsv()){
+      $payload = json_encode(array("mensaje" => "Listado descargado con exito"));
+    }else{
+      $payload = json_encode(array("ERROR" => "Error al descargar el archivo"));
     }
 
-    private function ConsultaPendientes($tipo){
-      return ProductoPedido::select('pedido_producto.pedido_id','pedido_producto.cantidad','productos.nombre','productos.tipo')
-      ->join('productos', 'pedido_producto.producto_id', '=', 'productos.id')
-      ->where('productos.tipo',$tipo)->where('pedido_producto.estado','PENDIENTE')->get();
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+  
+  public function LeerCsv($request, $response, $args)
+  {
+    if(Producto::leerCsv()){
+      $payload = json_encode(array("mensaje" => "Listado guardado con exito"));
+    }else{
+      $payload = json_encode(array("ERROR" => "Error al leer el archivo"));
     }
 
-    private function ConsultaTipoProducto($productoPedido){
-      return ProductoPedido::select('productos.tipo')
-      ->join('productos', $productoPedido->producto_id, '=', 'productos.id');
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+
+  private static function ValidarTipo($value){
+    $tipo = strtoupper($value);
+    if($tipo=="COMIDA" || $tipo=="BEBIDA" || $tipo=="CERVEZA" || $tipo=="POSTRE"){
+        return true;
     }
+    return false;
+  }
+
+  private function ConsultaPendientes($tipo){
+    return ProductoPedido::select('pedido_producto.pedido_id','pedido_producto.cantidad','productos.nombre','productos.tipo')
+    ->join('productos', 'pedido_producto.producto_id', '=', 'productos.id')
+    ->where('productos.tipo',$tipo)->where('pedido_producto.estado','PENDIENTE')->get();
+  }
+
+  private function ConsultaTipoProducto($productoPedido){
+    return ProductoPedido::select('productos.tipo')
+    ->join('productos', $productoPedido->producto_id, '=', 'productos.id');
+  }
+
 }

@@ -71,9 +71,11 @@ $app->group('/usuarios', function (RouteCollectorProxy $group) {
 
 $app->group('/productos', function (RouteCollectorProxy $group) {
   $group->get('[/]', \ProductoController::class . ':TraerTodos');
+  $group->get('/descargarCsv', \ProductoController::class . ':DescargarCsv');
   $group->get('/{producto}', \ProductoController::class . ':TraerUno');
-  $group->post('/{producto}', \ProductoController::class . ':ModificarUno');
   $group->post('[/]', \ProductoController::class . ':CargarUno');
+  $group->post('/cargarCsv', \ProductoController::class . ':LeerCsv');
+  $group->post('/{producto}', \ProductoController::class . ':ModificarUno');
 })->add(\MiddlewareJWT::class.':verificarToken');
 
 $app->group('/pendientes', function (RouteCollectorProxy $group) {
