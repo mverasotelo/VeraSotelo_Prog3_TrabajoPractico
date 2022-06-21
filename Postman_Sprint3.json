@@ -1,0 +1,536 @@
+{
+	"info": {
+		"_postman_id": "2a9e4072-6532-4b12-9f24-9d10ed5c0e19",
+		"name": "TRABAJO PRACTICO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Sprint 1 y 2",
+			"item": [
+				{
+					"name": "ABM  usuario",
+					"item": [
+						{
+							"name": "Obtener usuarios",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener un usuario",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTUyNTQ5NzgsImV4cCI6MTY1NTMxNDk3OCwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6Ikp1YW4iLCJjbGF2ZSI6ImFiY2QiLCJwZXJmaWwiOiJTT0NJTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.72mayukgqTk2nEG6vJ4wgOkDOsjpwT-5X67ApTsbPk8",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":1,\r\n    \"tiempoEstimado\" : 30\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:666/usuarios/Pablo",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"usuarios",
+										"Pablo"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alta usuario",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre",
+											"value": "Mercedes",
+											"type": "default"
+										},
+										{
+											"key": "clave",
+											"value": "12345",
+											"type": "default"
+										},
+										{
+											"key": "perfil",
+											"value": "SOCIO",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:666/usuarios",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"usuarios"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login usuario",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "usuario",
+											"value": "Mercedes",
+											"type": "default"
+										},
+										{
+											"key": "clave",
+											"value": "123abc",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:666/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ABM productos",
+					"item": [
+						{
+							"name": "Obtener productos",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Alta producto",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "nombre",
+											"value": "Gaseosa",
+											"type": "default"
+										},
+										{
+											"key": "tipo",
+											"value": "BEBIDA",
+											"type": "default"
+										},
+										{
+											"key": "precio",
+											"value": "300",
+											"type": "default"
+										},
+										{
+											"key": "stock",
+											"value": "45",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:666/productos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"productos"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ABM pedidos",
+					"item": [
+						{
+							"name": "Listas pendientes",
+							"item": [
+								{
+									"name": "Pendientes cocina",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTUyNDIzNTIsImV4cCI6MTY1NTMwMjM1MiwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6IlBhYmxvIiwiY2xhdmUiOiJhYmNkIiwicGVyZmlsIjoiTU9aTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.b9NNTj56Wl7nvpdLA8vY8RB2cJAyTEjjPZa3DymJQhQ",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:666/pendientes/cocina",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "666",
+											"path": [
+												"pendientes",
+												"cocina"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Pendientes cerveceria",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTUyNDIzNTIsImV4cCI6MTY1NTMwMjM1MiwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6IlBhYmxvIiwiY2xhdmUiOiJhYmNkIiwicGVyZmlsIjoiTU9aTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.b9NNTj56Wl7nvpdLA8vY8RB2cJAyTEjjPZa3DymJQhQ",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:666/productos/pendientesCerveceria",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "666",
+											"path": [
+												"productos",
+												"pendientesCerveceria"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Pendientes barra",
+									"request": {
+										"method": "GET",
+										"header": []
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Obtener pedidos",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:666/pedidos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"pedidos"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener un pedido",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Preparar pedido cervecería",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTUzMDgwMjMsImV4cCI6MTY1NTM2ODAyMywiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6Ikp1YW4iLCJjbGF2ZSI6ImFiY2QiLCJwZXJmaWwiOiJTT0NJTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.4R1Rc8y39zisrwsFF-b7Ybzgqc2wmn2oi10U9sj_m74",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : 1\r\n    \"tiempoEstimado\" : 30\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:666/pedidos/preparar/cerveceria",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"pedidos",
+										"preparar",
+										"cerveceria"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Preparar pedido cocina",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : 1,\r\n    \"tiempoEstimado\" : 30\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:666/pedidos/preparar/cocina",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"pedidos",
+										"preparar",
+										"cocina"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Preparar pedido barra",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\" : 1,\r\n    \"tiempoEstimado\" : 25\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:666/pedidos/preparar/barra",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"pedidos",
+										"preparar",
+										"barra"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Alta pedido",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:666/pedidos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"pedidos"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ABM mesas",
+					"item": [
+						{
+							"name": "Obtener una mesa",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener mesas",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "Alta mesa",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTUwNjc5MTUsImV4cCI6MTY1NTEyNzkxNSwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6IlBhYmxvIiwiY2xhdmUiOiJhYmNkIiwicGVyZmlsIjoiTU9aTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.V-46v6524jvww1p0bynm1l0d1sRC3UpYuM4ODeR2fVs",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "codigo",
+											"value": "BCDEF",
+											"type": "default"
+										},
+										{
+											"key": "estado",
+											"value": "con cliente esperando pedido",
+											"type": "default"
+										},
+										{
+											"key": "cliente",
+											"value": "Charly Garcia",
+											"type": "default"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:666/mesas",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"mesas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cerrar mesa",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:666/mesas?codigo=ABCDE",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "666",
+									"path": [
+										"mesas"
+									],
+									"query": [
+										{
+											"key": "codigo",
+											"value": "ABCDE"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Sprint 3",
+			"item": [
+				{
+					"name": "Descargar CSV productos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:666/productos/descargarCsv",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "666",
+							"path": [
+								"productos",
+								"descargarCsv"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cargar CSV productos",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

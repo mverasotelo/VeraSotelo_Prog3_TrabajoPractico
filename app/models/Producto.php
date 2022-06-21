@@ -49,11 +49,10 @@ class Producto extends Model{
     public static function toProducto($stringProducto){
         $arrayProducto = explode(",",$stringProducto);
         $producto = new Producto();
-        $producto->id = $stringProducto[0];
-        $producto->nombre = $stringProducto[1];
-        $producto->tipo = $stringProducto[2];
-        $producto->precio = $stringProducto[3];
-        $producto->stock = $stringProducto[4];
+        $producto->nombre = $arrayProducto[1];
+        $producto->tipo = $arrayProducto[2];
+        $producto->precio = $arrayProducto[3];
+        $producto->stock = $arrayProducto[4];
         return $producto;
     }
 
@@ -62,12 +61,18 @@ class Producto extends Model{
      */
     public static function descargarCsv(){
         $retorno = false;
-        $filename = './archivos/productos.csv';
+        $filename = './archivos/productos.csv'; 
         try{
+
             $lista = Producto::all();
             if(!file_exists($filename)){
                 mkdir(dirname($filename, 1), 0777, true);
             }
+
+            // header('Content-Type: text/csv');
+            // header('Content-Disposition: attachment; filename='.$filename);
+            // $file = fopen("php://output", "w");
+
             $file = fopen($filename, "w");
             if($file){
                 foreach($lista as $producto){
@@ -87,22 +92,25 @@ class Producto extends Model{
      * Lee el archivo productos.csv y guarda los productos en la base de datos.
      */
     public static function leerCsv(){
+        $retorno = false;
         $filename = './archivos/productos.csv';
-        $file = fopen($filename, "r");
-        if($file!=false){
-            while(!feof($file)){
-                $stringProducto = fgets($file);
-                $stringProducto = substr($stringProducto, 0, -1); 
-                if(!empty($stringProducto)){
-                    try{
+        try{
+            $file = fopen($filename, "r");
+            if($file!=false){
+                while(!feof($file)){
+                    $stringProducto = fgets($file);
+                    $stringProducto = substr($stringProducto, 0, -1); 
+                    if(!empty($stringProducto)){                           
                         Producto::toProducto($stringProducto)->save();
-                        echo "Producto guardado";
-                    }catch(Exception $e){
-                        echo "Error: ".$e->getMessage();
                     }
                 }
+                $retorno = true;
             }
+        }catch(Exception $e){
+            echo "Error: ".$e->getMessage();
+        }finally{
             fclose($file);
+            return $retorno;
         }
     }
 
