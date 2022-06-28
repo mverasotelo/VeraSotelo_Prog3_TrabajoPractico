@@ -1,9 +1,15 @@
 <?php
+/*
+Mercedes Vera Sotelo
+Trabajo Práctico
+*/
 
 require_once './models/Usuario.php';
+require_once './models/RegistroEmpleados.php';
 
 use GuzzleHttp\Psr7\Response;
 use \App\Models\Usuario as Usuario;
+use \App\Models\RegistroEmpleados as RegistroEmpleados;
 
 class LoginController
 {
@@ -22,7 +28,14 @@ class LoginController
                 $datos = array('usuario' => $nombre, 'clave' => $clave, 'perfil'=> $usuario->perfil);
                 $token = AutentificadorJWT::CrearToken($datos);
                 $payload = json_encode(array('jwt' => $token));
+
+                $registro = new RegistroEmpleados();
+                $registro->empleado_id = $usuario->id;
+                $registro->operacion = "INGRESO";
+                $registro->save();
+
                 $response->getBody()->write($payload);
+
              }else{
                 $response->getBody()->write("Usuario o clave incorrectos".password_hash($clave, PASSWORD_DEFAULT));
                 $response = $response->withStatus(401);

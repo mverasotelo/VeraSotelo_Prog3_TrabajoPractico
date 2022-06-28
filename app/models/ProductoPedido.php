@@ -17,7 +17,6 @@ class ProductoPedido extends Model{
     protected $table = 'pedido_producto';
     protected $fillable = ['producto_id','pedido_id','cantidad','estado','tiempoEstimado'];
     public $incrementing = true;
-    public $timestamps = false;
 
     public function producto(){
         return $this->hasOne(Producto::class, 'id');
@@ -28,13 +27,8 @@ class ProductoPedido extends Model{
     }
 
     public function pedidos(){
-        return $this->belongsTo(Pedido::class, 'id');
+        return $this->belongsTo(Pedido::class);
     }
-
-    
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-    const DELETED_AT = 'deleted_at';
 }
  
 ?>

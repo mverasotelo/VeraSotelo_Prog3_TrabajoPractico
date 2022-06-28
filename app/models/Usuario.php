@@ -16,9 +16,11 @@ class Usuario extends Model{
     protected $primaryKey = 'id';
     protected $fillable = ['nombre','clave','perfil'];
     public $incrementing = true;
-    public $timestamps = false;
+    
+    public function registros(){
+        return $this->hasMany(RegistroEmpleados::class, 'empleado_id');
+    }
 
-    const DELETED_AT = 'fechaBaja';
 }
 
 ?>

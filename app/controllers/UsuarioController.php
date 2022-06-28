@@ -6,6 +6,7 @@ Trabajo Práctico
 
 require_once './interfaces/IApiUsable.php';
 require_once './models/Usuario.php';
+require_once './models/ListadoEmpleados.php';
 
 use \App\Models\Usuario as Usuario;
 
@@ -53,6 +54,9 @@ class UsuarioController implements IApiUsable
   public function TraerTodos($request, $response, $args)
   {
     $lista = Usuario::all();
+    foreach($lista as $u){
+      $u->registros;
+    }
     $payload = json_encode(array("listaUsuarios" => $lista));
 
     $response->getBody()->write($payload);
@@ -105,6 +109,32 @@ class UsuarioController implements IApiUsable
     $response->getBody()->write($payload);
     return $response
       ->withHeader('Content-Type', 'application/json');
+  }
+
+  public static function DescargarListaEmpleados($request, $response, $args)
+  {
+    ob_start();
+    
+    $pdf = new ListadoEmpleados('P', 'cm','letter');
+    $pdf->SetAuthor("Mercedes Vera Sotelo", true);
+    $pdf->AddPage();
+    $pdf->Body();
+    $titulo = "Listado de empleados.pdf";
+    $pdf->Output($titulo, 'D', true);
+
+    ob_end_flush(); 
+
+    $response->getBody()->write($payload);
+    return $response
+    ->withHeader('Content-Type', 'application/pdf');
+  }
+
+  private static function ValidarEstado($value){
+    $estado = strtoupper($value);
+    if($estado=="PENDIENTE" || $estado=="EN PREPARACION" || $estado=="LISTO PARA SERVIR"){
+      return true;
+    }
+    return false;
   }
 
   private static function ValidarPerfil($value){

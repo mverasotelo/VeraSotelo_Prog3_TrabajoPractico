@@ -9,20 +9,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Mesa extends Model{
+class RegistroEmpleados extends Model{
 
     use SoftDeletes;
 
     protected $primaryKey = 'id';
-    protected $fillable = ['codigo','estado'];
+    protected $table = 'registros_empleados';
+    protected $fillable = ['empleado_id','operacion'];
     public $incrementing = true;
-    public $timestamps = false;
 
-    public function pedidos(){
-        return $this->hasMany(Pedido::class, 'mesa_id');
+    public function empleado(){
+        return $this->belongsTo(Usuario::class, 'empleado_id');
     }
-
-    const DELETED_AT = 'fechaBaja';
-
 }
+
 ?>

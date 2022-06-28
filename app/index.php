@@ -20,6 +20,8 @@ require_once './controllers/ProductoController.php';
 require_once './controllers/MesaController.php';
 require_once './controllers/PedidoController.php';
 require_once './controllers/LoginController.php';
+require_once './controllers/EncuestaController.php';
+require_once './controllers/RegistroController.php';
 require_once './middlewares/VerificadorPerfiles.php';
 require_once './middlewares/VerificadorUsuario.php';
 require_once './middlewares/MiddlewareJWT.php';
@@ -71,18 +73,11 @@ $app->group('/usuarios', function (RouteCollectorProxy $group) {
 
 $app->group('/productos', function (RouteCollectorProxy $group) {
   $group->get('[/]', \ProductoController::class . ':TraerTodos');
-  $group->get('/descargarCsv', \ProductoController::class . ':DescargarCsv');
   $group->get('/{producto}', \ProductoController::class . ':TraerUno');
   $group->post('[/]', \ProductoController::class . ':CargarUno');
   $group->post('/cargarCsv', \ProductoController::class . ':LeerCsv');
   $group->post('/{producto}', \ProductoController::class . ':ModificarUno');
-})->add(\MiddlewareJWT::class.':verificarToken');
-
-$app->group('/pendientes', function (RouteCollectorProxy $group) {
-  $group->get('/cocina', \ProductoController::class . ':TraerPendientesCocina')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
-  $group->get('/cerveceria', \ProductoController::class . ':TraerPendientesCerveceria')->add(\VerificadorPerfiles::class.':VerificarPerfilCervecero');
-  $group->get('/barra', \ProductoController::class . ':TraerPendientesBarra')->add(\VerificadorPerfiles::class.':VerificarPerfilBartender');
-})->add(\MiddlewareJWT::class.':verificarToken');
+})->add(\MiddlewareJWT::class.':verificarToken');;
 
 $app->group('/mesas', function (RouteCollectorProxy $group) {
   $group->get('[/]', \MesaController::class . ':TraerTodos');
@@ -92,14 +87,44 @@ $app->group('/mesas', function (RouteCollectorProxy $group) {
   $group->post('[/]', \MesaController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
 })->add(\MiddlewareJWT::class.':verificarToken')->add(\VerificadorPerfiles::class.':VerificarPerfilMozo');
 
-$app->group('/pedidos', function (RouteCollectorProxy $group) {
+$app->group('/comandas', function (RouteCollectorProxy $group) {
   $group->get('[/]', \PedidoController::class . ':TraerTodos');
-  $group->get('/{pedido}', \PedidoController::class . ':TraerUno');
-  $group->put('/preparar/cocina', \ProductoController::class . ':PrepararCocina')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
-  $group->put('/preparar/barra', \ProductoController::class . ':PrepararBarra')->add(\VerificadorPerfiles::class.':VerificarPerfilBartender');
-  $group->put('/preparar/cerveceria', \ProductoController::class . ':PrepararCerveceria')->add(\VerificadorPerfiles::class.':VerificarPerfilCervecero');
-  $group->post('[/]', \PedidoController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
+  $group->post('[/]', \PedidoController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilMozo');
 })->add(\MiddlewareJWT::class.':verificarToken');
+
+//El cliente ingresa el código de la mesa junto con el número de pedido
+$app->group('/consultarMiPedido', function (RouteCollectorProxy $group) {
+  $group->get('/{codigoPedido}', \PedidoController::class . ':TraerUno');
+});
+
+$app->group('/pedidos', function (RouteCollectorProxy $group) {
+  $group->post('[/]', \PedidoController::class . ':AgregarProducto');
+  $group->get('/pendientes/cocina', \PedidoController::class . ':TraerPendientesCocina')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
+  $group->get('/pendientes/cerveceria', \PedidoController::class . ':TraerPendientesCerveceria')->add(\VerificadorPerfiles::class.':VerificarPerfilCervecero');
+  $group->get('/pendientes/barra', \PedidoController::class . ':TraerPendientesBarra')->add(\VerificadorPerfiles::class.':VerificarPerfilBartender');
+  $group->put('/preparar/cocina', \PedidoController::class . ':PrepararCocina')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
+  $group->put('/preparar/barra', \PedidoController::class . ':PrepararBarra')->add(\VerificadorPerfiles::class.':VerificarPerfilBartender');
+  $group->put('/preparar/cerveceria', \PedidoController::class . ':PrepararCerveceria')->add(\VerificadorPerfiles::class.':VerificarPerfilCervecero');
+})->add(\MiddlewareJWT::class.':verificarToken')->add(\VerificadorPerfiles::class.':VerificarPerfilMozo');
+
+$app->group('/registros', function (RouteCollectorProxy $group) {
+  $group->get('[/]', \RegistroController::class . ':TraerTodos');
+  $group->get('/{empleado}', \RegistroController::class . ':TraerRegistrosPorEmpleado');
+})->add(\MiddlewareJWT::class.':verificarToken')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');;
+
+$app->group('/encuestas', function (RouteCollectorProxy $group) {
+  $group->get('[/]', \EncuestaController::class . ':TraerTodos');
+  $group->get('/{empleado}', \EncuestaController::class . ':TraerUno');
+  $group->post('[/]', \EncuestaController::class . ':CargarUno');
+})->add(\MiddlewareJWT::class.':verificarToken')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
+
+$app->group('/descargarListaEmpleados', function (RouteCollectorProxy $group) {
+  $group->get('[/]', \UsuarioController::class . ':DescargarListaEmpleados');
+});
+
+$app->group('/descargarCsvProductos', function (RouteCollectorProxy $group) {
+  $group->get('[/]', \ProductoController::class . ':DescargarCsv');
+});
 
 $app->get('[/]', function (Request $request, Response $response) {
     $response->getBody()->write("TP Programación III Mercedes Vera Sotelo");

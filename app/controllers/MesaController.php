@@ -13,13 +13,9 @@ class MesaController implements IApiUsable
     $parametros = $request->getParsedBody();
 
     $codigo = $parametros['codigo'];
-    $estado = $parametros['estado'];
-    $cliente = $parametros['cliente'];
 
     $mesa = new Mesa();
     $mesa->codigo = $codigo;
-    $mesa->estado = $estado;
-    $mesa->cliente = $cliente;
     $mesa->save();
 
     $payload = json_encode(array("mensaje" => "Mesa creada con exito"));
@@ -62,7 +58,6 @@ class MesaController implements IApiUsable
     $parametros = $request->getParsedBody();
 
     $nuevoEstado = $parametros['estado'];
-    $nuevoCliente = $parametros['cliente'];
     $mesaCodigo = $args['codigo'];
 
     // Conseguimos el objeto
@@ -72,7 +67,6 @@ class MesaController implements IApiUsable
     if ($mesa !== null) {
       // Seteamos una nueva mesa 
       $mesa->estado = $nuevoEstado;
-      $mesa->cliente = $nuevoCliente;
       $mesa->save();
 
       $payload = json_encode(array("mensaje" => "Mesa modificada con exito"));
@@ -132,5 +126,4 @@ class MesaController implements IApiUsable
     return false;
   }
 
-    
 }

@@ -9,19 +9,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Mesa extends Model{
+class Encuesta extends Model{
 
     use SoftDeletes;
 
     protected $primaryKey = 'id';
-    protected $fillable = ['codigo','estado'];
+    protected $fillable = ['codigoPedido', 'codigoMesa','puntuacionMesa','puntuacionMozo','puntuacionRestaurante', 'puntuacionCocinero', 'comentario'];
     public $incrementing = true;
     public $timestamps = false;
 
-    public function pedidos(){
-        return $this->hasMany(Pedido::class, 'mesa_id');
-    }
-
+    const CREATED_AT = 'fechaEncuesta';
     const DELETED_AT = 'fechaBaja';
 
 }
