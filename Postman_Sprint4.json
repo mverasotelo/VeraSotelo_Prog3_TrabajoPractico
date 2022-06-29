@@ -331,11 +331,21 @@
 								{
 									"name": "Preparar pedido barra",
 									"request": {
-										"method": "POST",
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTY0MTA3OTgsImV4cCI6MTY1NjQ3MDc5OCwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6Ikp1YW4iLCJjbGF2ZSI6ImFiY2QiLCJwZXJmaWwiOiJTT0NJTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.TkIeojwVfs60C9wuUN1hoIreiMq0oChY-VlQ7RURAwc",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n    \"id\" : 1,\r\n    \"tiempoEstimado\" : 25\r\n}",
+											"raw": "{\r\n    \"id\" : 7,\r\n    \"tiempoEstimado\" : 10\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -359,6 +369,139 @@
 									"response": []
 								}
 							]
+						},
+						{
+							"name": "Cambiar estado a pedido listo",
+							"item": [
+								{
+									"name": "Cocina",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTY0NTk3MTEsImV4cCI6MTY1NjUxOTcxMSwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6Ikp1YW4iLCJjbGF2ZSI6ImFiY2QiLCJwZXJmaWwiOiJTT0NJTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.37PtXCBiTE4tt5QMrVOdO3Wlie4H28VBdJU_V1ggxuo",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 4\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:666/pedidos/pedidolisto/cocina",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "666",
+											"path": [
+												"pedidos",
+												"pedidolisto",
+												"cocina"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Barra",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTY0NTk3MTEsImV4cCI6MTY1NjUxOTcxMSwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6Ikp1YW4iLCJjbGF2ZSI6ImFiY2QiLCJwZXJmaWwiOiJTT0NJTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.37PtXCBiTE4tt5QMrVOdO3Wlie4H28VBdJU_V1ggxuo",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:666/pedidos/pedidolisto/barra",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "666",
+											"path": [
+												"pedidos",
+												"pedidolisto",
+												"barra"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cerveceria",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NTY0NTk3MTEsImV4cCI6MTY1NjUxOTcxMSwiYXVkIjoiZTFmZDE5MDAxNTU4NTQ4OTg4NmVkMzNmZjcwOWIwMjExN2RhMDdiMyIsImRhdGEiOnsidXN1YXJpbyI6Ikp1YW4iLCJjbGF2ZSI6ImFiY2QiLCJwZXJmaWwiOiJTT0NJTyJ9LCJhcHAiOiJUZXN0IEpXVCJ9.37PtXCBiTE4tt5QMrVOdO3Wlie4H28VBdJU_V1ggxuo",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"id\": 3\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:666/pedidos/pedidolisto/cocina",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "666",
+											"path": [
+												"pedidos",
+												"pedidolisto",
+												"cocina"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Ver pedidos listos para servir",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
 						},
 						{
 							"name": "Nueva comanda",
@@ -417,6 +560,14 @@
 										"comandas"
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ver comandas",
+							"request": {
+								"method": "GET",
+								"header": []
 							},
 							"response": []
 						},
@@ -545,6 +696,14 @@
 										}
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "Cambiar a mesa servida",
+							"request": {
+								"method": "GET",
+								"header": []
 							},
 							"response": []
 						}

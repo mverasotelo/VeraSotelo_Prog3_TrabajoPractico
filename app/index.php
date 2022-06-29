@@ -83,6 +83,7 @@ $app->group('/mesas', function (RouteCollectorProxy $group) {
   $group->get('[/]', \MesaController::class . ':TraerTodos');
   $group->get('/{codigo}', \MesaController::class . ':TraerUno');
   $group->post('/{codigo}', \MesaController::class . ':ModificarUno');
+  $group->put('/mesaServida/{codigo}', \MesaController::class . ':cambiarAMesaServida')->add(\VerificadorPerfiles::class.':VerificarPerfilMozo');
   $group->put('/cerrarMesa/{codigo}', \MesaController::class . ':CerrarMesa')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
   $group->post('[/]', \MesaController::class . ':CargarUno')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');
 })->add(\MiddlewareJWT::class.':verificarToken')->add(\VerificadorPerfiles::class.':VerificarPerfilMozo');

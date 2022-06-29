@@ -96,6 +96,30 @@ class MesaController implements IApiUsable
       ->withHeader('Content-Type', 'application/json');
   }
 
+  public function cambiarAMesaServida($request, $response, $args)
+  {
+    $mesaCodigo = $args['codigo'];
+
+    $mesa = Mesa::where('codigo', $mesaCodigo)->first();
+
+    if ($mesa !== null) {
+      if($mesa->estado != "CON CLIENTES COMIENDO"){
+        $mesa->estado = "CON CLIENTES COMIENDO";
+        $mesa->save();
+        $payload = json_encode(array("mensaje" => "Mesa ".$mesaCodigo." con clientes comiendo"));
+      }else{
+        $payload = json_encode(array("mensaje" => "La mesa ".$mesaCodigo." ya se encontraba con clientes comiendo"));
+
+      }
+    } else {
+      $payload = json_encode(array("mensaje" => "Mesa ".$mesaCodigo." no encontrada"));
+    }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
   public function CerrarMesa($request, $response, $args)
   {
     $mesaCodigo = $args['codigo'];
