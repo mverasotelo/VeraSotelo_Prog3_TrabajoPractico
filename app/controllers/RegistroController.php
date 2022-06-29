@@ -25,7 +25,8 @@ class RegistroController
   public function TraerRegistrosPorEmpleado($request, $response, $args)
   {
     $idEmpleado = intval($args['idEmpleado']);
-    $lista = RegistroEmpleados::where('empleado_id',$idEmpleado).get();
+    $lista = RegistroEmpleados::select('registros_empleados.empleado_id as ID Empleado','usuarios.nombre as Nombre Empleado', 'registros_empleados.operacion as Operacion', 'registros_empleados.created_at as Fecha')
+    ->join('usuarios', 'usuarios.id','=', 'registros_empleados.empleado_id')->where('empleado_id',$idEmpleado)->get();
 
     if(count($lista)>0){
         $payload = json_encode(array("Registros" => $lista));

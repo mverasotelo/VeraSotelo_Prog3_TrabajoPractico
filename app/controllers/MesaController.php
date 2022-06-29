@@ -30,7 +30,9 @@ class MesaController implements IApiUsable
     $codigo = $args['codigo'];
 
     $mesa = Mesa::where('codigo',$codigo)->first();
-    $mesa->pedidos;
+    if($mesa->pedidos!=null){
+      $mesa->pedidos;
+    }
 
     $payload = json_encode(array("listaMesas" => $mesa));
 
@@ -112,6 +114,17 @@ class MesaController implements IApiUsable
     } else {
       $payload = json_encode(array("mensaje" => "Mesa ".$mesaCodigo." no encontrada"));
     }
+
+    $response->getBody()->write($payload);
+    return $response
+      ->withHeader('Content-Type', 'application/json');
+  }
+
+  public function TraerMesaMasUsada($request, $response, $args)
+  {
+
+    $mesa = Pedido::groupBy('mesa_id')->get();
+    $payload = json_encode(array("Mesa mas usada" => $mesa));
 
     $response->getBody()->write($payload);
     return $response

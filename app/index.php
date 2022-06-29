@@ -99,17 +99,22 @@ $app->group('/consultarMiPedido', function (RouteCollectorProxy $group) {
 
 $app->group('/pedidos', function (RouteCollectorProxy $group) {
   $group->post('[/]', \PedidoController::class . ':AgregarProducto');
+  $group->get('/todos', \PedidoController::class . ':TraerTodos')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
   $group->get('/pendientes/cocina', \PedidoController::class . ':TraerPendientesCocina')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
   $group->get('/pendientes/cerveceria', \PedidoController::class . ':TraerPendientesCerveceria')->add(\VerificadorPerfiles::class.':VerificarPerfilCervecero');
   $group->get('/pendientes/barra', \PedidoController::class . ':TraerPendientesBarra')->add(\VerificadorPerfiles::class.':VerificarPerfilBartender');
+  $group->get('/listosparaservir', \PedidoController::class . ':TraerListosParaServir')->add(\VerificadorPerfiles::class.':VerificarPerfilMozo');
   $group->put('/preparar/cocina', \PedidoController::class . ':PrepararCocina')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
   $group->put('/preparar/barra', \PedidoController::class . ':PrepararBarra')->add(\VerificadorPerfiles::class.':VerificarPerfilBartender');
   $group->put('/preparar/cerveceria', \PedidoController::class . ':PrepararCerveceria')->add(\VerificadorPerfiles::class.':VerificarPerfilCervecero');
+  $group->put('/pedidolisto/cocina', \PedidoController::class . ':PedidoListoCocina')->add(\VerificadorPerfiles::class.':VerificarPerfilCocinero');
+  $group->put('/pedidolisto/barra', \PedidoController::class . ':PedidoListoBarra')->add(\VerificadorPerfiles::class.':VerificarPerfilBartender');
+  $group->put('/pedidolisto/cerveceria', \PedidoController::class . ':PedidoListoCerveceria')->add(\VerificadorPerfiles::class.':VerificarPerfilCervecero');
 })->add(\MiddlewareJWT::class.':verificarToken')->add(\VerificadorPerfiles::class.':VerificarPerfilMozo');
 
 $app->group('/registros', function (RouteCollectorProxy $group) {
   $group->get('[/]', \RegistroController::class . ':TraerTodos');
-  $group->get('/{empleado}', \RegistroController::class . ':TraerRegistrosPorEmpleado');
+  $group->get('/{idEmpleado}', \RegistroController::class . ':TraerRegistrosPorEmpleado');
 })->add(\MiddlewareJWT::class.':verificarToken')->add(\VerificadorPerfiles::class.':VerificarPerfilSocio');;
 
 $app->group('/encuestas', function (RouteCollectorProxy $group) {
